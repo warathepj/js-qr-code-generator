@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Generator with Download and Color Options</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  </head>
+  <body>
+    <div class="cursor"></div>
+    <div class="container">
+      <h1>QuickQR</h1>
+      <br />
+      <input type="text" id="urlInput" placeholder="Enter URL or text here" />
+      <br />
+
+      <select id="colorSelect">
+        <option value="0">Black and White</option>
+        <option value="1">Blue Shades</option>
+        <option value="2">Green Shades</option>
+        <option value="3">Red Shades</option>
+      </select>
+      <br />
+      <button onclick="generateQR()">Generate QR Code</button>
+      <div id="qrcode"></div>
+      <a 
+        id="downloadLink" 
+        style="display: none; color: black; font-size: 2rem"
+      >
+        Download QR Code
+      </a>
+
+      <h3>CorgiDev</h3>
+      <img
+        src="https://warathepj.github.io/js-ai-gallery/public/image/fri11.jpeg"
+        alt="CorgiDev"
+      />
+
+      <footer>
+        <p>
+          Copyright © <span id="currentYear"></span> CorgiDev. All Rights
+          Reserved.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const colorSets = [
+        { colorDark: "#000000", colorLight: "#ffffff" },
+        { colorDark: "#0066ff", colorLight: "#b3d1ff" },
+        { colorDark: "#28a428", colorLight: "#adebad" },
+        { colorDark: "#e62e00", colorLight: "#ffad99" },
+      ];
+
+      function generateQR() {
+        const url = document.getElementById("urlInput").value;
+        const colorSetIndex = document.getElementById("colorSelect").value;
+
+        if (url) {
+          // Clear previous QR code if any
+          document.getElementById("qrcode").innerHTML = "";
+
+          // Get selected color set
+          const colorSet = colorSets[colorSetIndex];
+
+          // Generate new QR code
+          const qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: url,
+            width: 128,
+            height: 128,
+            colorDark: colorSet.colorDark,
+            colorLight: colorSet.colorLight,
+            correctLevel: QRCode.CorrectLevel.H,
+          });
+
+          // Wait for QR code to be generated
+          setTimeout(() => {
+            // Get the canvas element
+            const canvas = document.querySelector("#qrcode canvas");
+
+            // Convert canvas to data URL
+            const imageData = canvas.toDataURL("image/png");
+
+            // Set up download link
+            const downloadLink = document.getElementById("downloadLink");
+            downloadLink.href = imageData;
+            downloadLink.download = "qrcode.png";
+            downloadLink.style.display = "block";
+          }, 100);
+        } else {
+          alert("Please enter a URL");
+        }
+      }
+
+      const cursor = document.querySelector(".cursor");
+
+      document.addEventListener("mousemove", (e) => {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+
+      const currentYear = new Date().getFullYear();
+      document.getElementById("currentYear").textContent = currentYear;
+    </script>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #a8c0ff; 
+        background: -webkit-linear-gradient(
+          to right,
+          #3f2b96,
+          #a8c0ff
+        ); 
+        background: linear-gradient(
+          to right,
+          #3f2b96,
+          #a8c0ff
+        ); 
+        color: #b9d7e9;
+      }
+
+      .cursor {
+        position: fixed;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        filter: blur(10px);
+        transition: all 0.2s ease;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      #urlInput {
+        width: 17rem;
+        height: 2rem;
+        margin-bottom: 3rem;
+        background-color: #7c97ee;
+        color: #b9d7e9;
+      }
+
+      #colorSelect {
+        margin-bottom: 3rem;
+        background-color: #7c97ee;
+        color: #b9d7e9;
+      }
+
+      #colorSelect:hover {
+        cursor: pointer;
+      }
+
+      button {
+        background-color: #7c97ee;
+        border-radius: 1rem;
+        padding: 0.5rem;
+        color: #b9d7e9;
+        border-color: rgb(124, 84, 235);
+        cursor: pointer;
+      }
+
+      #qrcode {
+        display: flex;
+        justify-content: center;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      img {
+        width: 10rem;
+      }
+
+      @media screen and (max-width: 347px) {
+        #colorSelect {
+          margin-bottom: 3rem;
+          height: 3rem;
+          width: 12rem;
+          font-size: 1rem;
+        }
+
+        button {
+          font-size: 1.5rem;
+          border-radius: 1rem;
+          padding: 0.5rem;
+        }
+      }
+
+      @media screen and (max-width: 416px) {
+        #colorSelect {
+          margin-bottom: 3rem;
+          height: 3rem;
+          width: 12rem;
+          font-size: 1rem;
+        }
+
+        button {
+          font-size: 1.5rem;
+          border-radius: 1rem;
+          padding: 0.5rem;
+          margin-bottom: -2rem;
+        }
+
+        h3 {
+          margin-top: -2rem;
+        }
+
+        #downloadLink {
+          margin-bottom: 2.8rem;
+        }
+      }
+
+      @media screen and (min-width: 817px) {
+        .container {
+          margin-top: 10rem;
+        }
+
+        h1 {
+          font-size: 7rem;
+        }
+
+        #urlInput {
+          width: 36rem;
+          height: 4rem;
+          font-size: 2rem;
+        }
+
+        #colorSelect {
+          margin-bottom: 3rem;
+          height: 4rem;
+          width: 22rem;
+          font-size: 2rem;
+        }
+
+        button {
+          font-size: 2.5rem;
+          border-radius: 2rem;
+          padding: 1rem;
+        }
+
+        h3 {
+          font-size: 2.5rem;
+        }
+
+        footer {
+          font-size: 2.5rem;
+        }
+      }
+
+      @media screen and (min-width: 908px) {
+        .container {
+          margin-top: 1rem;
+        }
+      }
+
+      @media screen and (min-width: 1020px) {
+        #urlInput {
+          width: 26rem;
+          height: 2rem;
+          font-size: 1rem;
+          margin-bottom: 1.8rem;
+        }
+
+        .container {
+          margin-top: 0.2rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+          margin-bottom: 0.4rem;
+        }
+
+        #colorSelect {
+          margin-bottom: 1.6rem;
+          height: 3rem;
+          width: 14rem;
+          font-size: 1rem;
+        }
+
+        button {
+          width: 15rem;
+          height: 2.2rem;
+          font-size: 1rem;
+          border-radius: 2rem;
+          padding: 0.2rem;
+          margin-bottom: -6rem;
+        }
+
+        h3 {
+          margin-top: -2rem;
+          margin-bottom: -2rem;
+          font-size: 1.5rem;
+        }
+
+        #downloadLink {
+          margin-bottom: 5rem;
+        }
+
+        footer {
+          font-size: 1.6rem;
+        }
+      }
+
+      @media screen and (min-width: 1200px) {
+        h1 {
+          font-size: 4rem;
+          margin-bottom: 1rem;
+        }
+
+        button {
+          height: 2.5rem;
+          margin-bottom: 4rem;
+        }
+      }
+    </style>
+  </body>
+</html>
